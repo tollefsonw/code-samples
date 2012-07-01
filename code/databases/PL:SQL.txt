@@ -1,0 +1,68 @@
+
+DECLARE
+
+	midtermWeight WEIGHTS.MIDPERCENT%type;
+	finalWeight WEIGHTS.FINPERCENT%type;
+	homeworkWeight  WEIGHTS.HWPERCENT%type;
+	score NUMBER(5,2);
+	grade CHAR(1);
+	studentInfo STUDENT%rowtype;
+	cursor studentPtr return STUDENT%rowtype is SELECT * FROM STUDENT;
+  
+BEGIN
+
+	SELECT MIDPERCENT, FINPERCENT, HWPERCENT
+	INTO midtermWeight, finalWeight, homeworkWeight
+	FROM WEIGHTS;
+  	dbms_output.put_line('Weights are ' || midtermWeight ||  ' ' 
+                          ||  finalWeight || ' ' || homeworkWeight);
+                          
+	for studentInfo in studentPtr
+	loop
+		score := ((studentInfo.MIDTERM*midtermWeight) + 
+                (studentinfo.FINAL*finalWeight) + 
+                  (studentInfo.Homework*homeworkWeight)) / 100;
+		if (score >= 90 AND score <=100) then
+			grade := 'A';
+		elsif (score >= 80 AND score <=89.99) then
+			grade := 'B';
+		elsif (score >= 65 AND score <=79.99) then
+			grade := 'C';
+		elsif (score <=64.99 AND score >= 0) then
+			grade := 'F';
+		end if;
+		dbms_output.put_line( studentInfo.ID || ' ' || 					studentInfo.NAME ||
+			' ' || score || ' ' || grade);      
+	end loop; 
+  
+END;
+/
+
+
+CREATE OR REPLACE TRIGGER ProjectRemoval AFTER UPDATE OR DELETE ON ASSIGNMENT
+
+DECLARE
+	cursor oldDeptsPtr IS
+		SELECT Code
+		FROM PROJECT;
+	testDepartment PROJECT.Code%type;
+  	verify Integer;
+  
+BEGIN
+	open oldDeptsPtr;
+	loop
+    	fetch oldDeptsPtr into testDepartment;
+		if (oldDeptsPtr%found) then  
+        		SELECT Count(ProjCode) INTO verify FROM ASSIGNMENT
+                      		WHERE ProjCode = testDepartment;
+			if (verify = 0) then
+				DELETE FROM PROJECT WHERE Code = 						testDepartment;
+				end if;	
+		else
+			exit;
+		end if;
+	end loop;
+	close oldDeptsPtr;
+  
+END;
+/

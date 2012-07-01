@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s0:definitions xmlns:s0="http://schemas.xmlsoap.org/wsdl/" xmlns:s1="http://com/wadetollefson/final" xmlns:s2="http://schemas.xmlsoap.org/wsdl/soap/" name="additionService" targetNamespace="http://com/wadetollefson/final">
+  <s0:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://com/wadetollefson/final" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://com/wadetollefson/final">
+      <xsd:complexType name="addRequest">
+        <xsd:sequence>
+          <xsd:element name="x" type="xsd:int"/>
+          <xsd:element name="y" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="addResponse">
+        <xsd:sequence>
+          <xsd:element name="z" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="addRequest" type="addRequest"/>
+      <xsd:element name="addResponse" type="addResponse"/>
+    </xsd:schema>
+  </s0:types>
+  <s0:message name="addRequest">
+    <s0:part element="s1:addRequest" name="addRequest"/>
+  </s0:message>
+  <s0:message name="addResponse">
+    <s0:part element="s1:addResponse" name="addResponse"/>
+  </s0:message>
+  <s0:portType name="additionService">
+    <s0:operation name="add">
+      <s0:input message="s1:addRequest"/>
+      <s0:output message="s1:addResponse"/>
+    </s0:operation>
+  </s0:portType>
+  <s0:binding name="additionServiceSOAP" type="s1:additionService">
+    <s2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <s0:operation name="add">
+      <s0:input>
+        <s2:body use="literal" parts="addRequest"/>
+      </s0:input>
+      <s0:output>
+        <s2:body use="literal" parts="addResponse"/>
+      </s0:output>
+    </s0:operation>
+  </s0:binding>
+  <s0:service name="additionService">
+    <s0:port binding="s1:additionServiceSOAP" name="additionServiceSOAP">
+      <s2:address location="http://wadetollefson.com/Services/additionService"/>
+    </s0:port>
+  </s0:service>
+</s0:definitions>
