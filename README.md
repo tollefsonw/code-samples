@@ -1,3 +1,3 @@
-A collection of projects I completed during my education.
+A collection of java-centric programming projects I completed during my education.
 
 Wade Tollefson
